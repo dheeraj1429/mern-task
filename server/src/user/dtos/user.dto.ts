@@ -1,41 +1,43 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString, Matches, Max, Min } from 'class-validator';
 
 export class User {
    @IsNotEmpty()
    @IsString()
-   firstName: string;
+   @Matches(/^[a-zA-Z ]+$/, { message: 'First name must contain only alphabets' })
+   readonly firstName: string;
 
    @IsNotEmpty()
    @IsString()
-   lastName: string;
+   @Matches(/^[a-zA-Z ]+$/, { message: 'Last name must contain only alphabets' })
+   readonly lastName: string;
 
    @IsNotEmpty()
    @IsEmail()
-   email: string;
+   readonly email: string;
 
    @IsNotEmpty()
    @IsString()
-   country: string;
+   readonly country: string;
 
    @IsNotEmpty()
    @IsString()
-   state: string;
+   readonly state: string;
 
    @IsNotEmpty()
    @IsString()
-   city: string;
+   readonly city: string;
 
    @IsNotEmpty()
    @IsString()
-   dob: string;
+   readonly dob: string;
 
    @IsNotEmpty()
    @IsNumber()
    @Min(14)
    @Max(99)
-   age: number;
+   readonly age: number;
 
    @IsNotEmpty()
    @IsString()
-   gender: string;
+   readonly gender: string;
 }

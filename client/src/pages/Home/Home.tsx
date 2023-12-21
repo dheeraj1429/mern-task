@@ -24,8 +24,16 @@ import { FormContainer, HomePageContainer } from './Home.style';
 import { useSelector } from 'react-redux';
 
 const schema = yup.object({
-   firstName: yup.string().required().typeError('First name is required'),
-   lastName: yup.string().required().typeError('Last name is required'),
+   firstName: yup
+      .string()
+      .required()
+      .typeError('First name is required')
+      .matches(/^[a-zA-Z ]+$/, 'First name must contain only alphabets'),
+   lastName: yup
+      .string()
+      .required()
+      .typeError('Last name is required')
+      .matches(/^[a-zA-Z ]+$/, 'Last name must contain only alphabets'),
    email: yup.string().email().required().typeError('Email is required'),
    country: yup.string().required().typeError('Country is required'),
    state: yup.string().required().typeError('State is required'),
@@ -69,8 +77,6 @@ function Home() {
    useEffect(() => {
       dispatch(getAllCountries());
    }, []);
-
-   console.log(errors);
 
    return (
       <HomePageContainer>
