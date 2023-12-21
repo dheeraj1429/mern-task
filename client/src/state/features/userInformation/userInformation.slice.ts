@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAllCountries, postUserInformationHandler, getAccountInformation } from './userInformation.actions';
+import {
+   getAllCountries,
+   postUserInformationHandler,
+   getAccountInformation,
+   getStateByCountries,
+   getCityByCountries,
+} from './userInformation.actions';
 import { InitialStateInterface } from '.';
 
 const INITIALSTATE: InitialStateInterface = {
@@ -12,6 +18,12 @@ const INITIALSTATE: InitialStateInterface = {
    allUsers: null,
    allUsersLoading: false,
    allUsersError: null,
+   stateByCountries: null,
+   stateByCountriesLoading: false,
+   stateByCountriesError: null,
+   cityByCountries: null,
+   cityByCountriesLoading: false,
+   cityByCountriesError: null,
 };
 
 const userInformation = createSlice({
@@ -64,6 +76,36 @@ const userInformation = createSlice({
             state.allUsers = action.payload;
             state.allUsersLoading = false;
             state.allUsersError = null;
+         })
+         .addCase(getStateByCountries.pending, (state) => {
+            state.stateByCountries = null;
+            state.stateByCountriesLoading = true;
+            state.stateByCountriesError = null;
+         })
+         .addCase(getStateByCountries.rejected, (state, action) => {
+            state.stateByCountries = null;
+            state.stateByCountriesLoading = false;
+            state.stateByCountriesError = action.payload;
+         })
+         .addCase(getStateByCountries.fulfilled, (state, action) => {
+            state.stateByCountries = action.payload;
+            state.stateByCountriesLoading = false;
+            state.stateByCountriesError = null;
+         })
+         .addCase(getCityByCountries.pending, (state) => {
+            state.cityByCountries = null;
+            state.cityByCountriesLoading = true;
+            state.cityByCountriesError = null;
+         })
+         .addCase(getCityByCountries.rejected, (state, action) => {
+            state.cityByCountries = null;
+            state.cityByCountriesLoading = false;
+            state.cityByCountriesError = action.payload;
+         })
+         .addCase(getCityByCountries.fulfilled, (state, action) => {
+            state.cityByCountries = action.payload;
+            state.cityByCountriesLoading = false;
+            state.cityByCountriesError = null;
          });
    },
 });

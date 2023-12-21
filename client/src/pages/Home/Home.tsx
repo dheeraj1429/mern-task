@@ -11,13 +11,22 @@ import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { FormStateInterface } from '.';
-import { getAllCountries, postUserInformationHandler } from '../../state/features/userInformation/userInformation.actions';
+import {
+   getAllCountries,
+   postUserInformationHandler,
+   getStateByCountries,
+   getCityByCountries,
+} from '../../state/features/userInformation/userInformation.actions';
 import {
    getCountriesLoadingSelector,
    getCountriesSelector,
    postUserInformationErrorSelector,
    postUserInformationSelector,
    postUserInformationLoadingSelector,
+   stateByCountriesSelector,
+   stateByCountriesLoadingSelector,
+   cityByCountriesSelector,
+   cityByCountriesLoadingSelector,
 } from '../../state/features/userInformation/userInformation.selector';
 import { useAppDispatch, useAppSelector } from '../../state/store/hooks';
 import { FormContainer, HomePageContainer } from './Home.style';
@@ -59,6 +68,10 @@ function Home() {
    const postUserInformationError = useAppSelector(postUserInformationErrorSelector);
    const postUserInformationLoading = useAppSelector(postUserInformationLoadingSelector);
    const postUserInformation = useSelector(postUserInformationSelector);
+   const stateByCountries = useSelector(stateByCountriesSelector);
+   const stateByCountriesLoading = useSelector(stateByCountriesLoadingSelector);
+   const cityByCountries = useSelector(cityByCountriesSelector);
+   const cityByCountriesLoading = useSelector(cityByCountriesLoadingSelector);
 
    const submitHandler = function (data: FormStateInterface) {
       dispatch(postUserInformationHandler(data));
@@ -107,15 +120,26 @@ function Home() {
                />
                {!!errors.email?.message ? <FormHelperText error>{errors.email.message}</FormHelperText> : null}
                {getCountriesLoading ? <CircularProgress size={'20px'} /> : null}
-               {!!getCountries && getCountries?.data.length ? (
+               {!!getCountries && getCountries.length ? (
                   <Controller
                      name="country"
                      control={control}
                      render={({ field: { onChange, value } }) => (
-                        <TextField onChange={onChange} value={value || ''} select label="Country">
-                           {getCountries.data.map((option) => (
-                              <MenuItem key={option.country} value={option.country}>
-                                 {option.country}
+                        <TextField
+                           onChange={(event) => {
+                              onChange(event);
+                              setValue('state', '');
+                              setValue('city', '');
+                              dispatch(getStateByCountries({ countryCode: event.target.value }));
+                              dispatch(getCityByCountries({ countryCode: event.target.value }));
+                           }}
+                           value={value || ''}
+                           select
+                           label="Country"
+                        >
+                           {getCountries.map((option) => (
+                              <MenuItem key={option.id} value={option.iso2}>
+                                 {option.name}
                               </MenuItem>
                            ))}
                         </TextField>
@@ -124,21 +148,46 @@ function Home() {
                ) : !getCountriesLoading ? (
                   <FormHelperText error>Opps! there is not country right now</FormHelperText>
                ) : null}
-               <Controller
-                  name="state"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                     <TextField onChange={onChange} value={value || ''} label="State" variant="outlined" type="text" />
-                  )}
-               />
+               {stateByCountriesLoading ? <CircularProgress size={'20px'} /> : null}
+               {!!stateByCountries && stateByCountries.length ? (
+                  <Controller
+                     name="state"
+                     control={control}
+                     render={({ field: { onChange, value } }) => (
+                        <TextField
+                           onChange={(event) => {
+                              onChange(event);
+                           }}
+                           value={value || ''}
+                           select
+                           label="State"
+                        >
+                           {stateByCountries.map((option) => (
+                              <MenuItem key={option.id} value={option.iso2}>
+                                 {option.name}
+                              </MenuItem>
+                           ))}
+                        </TextField>
+                     )}
+                  />
+               ) : null}
                {!!errors.state?.message ? <FormHelperText error>{errors.state.message}</FormHelperText> : null}
-               <Controller
-                  name="city"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                     <TextField onChange={onChange} value={value || ''} label="City" variant="outlined" type="text" />
-                  )}
-               />
+               {cityByCountriesLoading ? <CircularProgress size={'20px'} /> : null}
+               {!!cityByCountries && cityByCountries.length ? (
+                  <Controller
+                     name="city"
+                     control={control}
+                     render={({ field: { onChange, value } }) => (
+                        <TextField onChange={onChange} value={value || ''} select label="City">
+                           {cityByCountries.map((option) => (
+                              <MenuItem key={option.id} value={option.name}>
+                                 {option.name}
+                              </MenuItem>
+                           ))}
+                        </TextField>
+                     )}
+                  />
+               ) : null}
                {!!errors.city?.message ? <FormHelperText error>{errors.city.message}</FormHelperText> : null}
                <FormLabel>Please selected you gender</FormLabel>
                <Controller

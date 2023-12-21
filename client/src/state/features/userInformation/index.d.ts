@@ -1,15 +1,11 @@
 import { ApiResponseInterface, ErrorType } from '../../../shared/types';
 
 export interface CountriesInterface {
+   id: number;
+   name: string;
    iso2: string;
-   iso3: string;
-   country: string;
 }
-export interface GetCountriesInterface {
-   error: boolean;
-   msg: string;
-   data: CountriesInterface[];
-}
+export type GetCountriesType = Array<CountriesInterface>;
 export interface PostUserInformationResponse extends ApiResponseInterface {}
 export type GetAllUsersType = Array<{
    _id: string;
@@ -23,8 +19,10 @@ export type GetAllUsersType = Array<{
    age: number;
    gender: string;
 }>;
+export type GetStateByCountriesType = Array<CountriesInterface>;
+export type getCityByCountriesType = Array<{ id: number; name: string }>;
 export interface InitialStateInterface {
-   getCountries: GetCountriesInterface | null | undefined;
+   getCountries: GetCountriesType | null | undefined;
    getCountriesLoading: boolean;
    getCountriesError: ErrorType;
    postUserInformation: PostUserInformationResponse | null;
@@ -33,4 +31,10 @@ export interface InitialStateInterface {
    allUsers: GetAllUsersType | null;
    allUsersLoading: boolean;
    allUsersError: ErrorType;
+   stateByCountries: GetStateByCountriesType | null;
+   stateByCountriesLoading: boolean;
+   stateByCountriesError: ErrorType;
+   cityByCountries: getCityByCountriesType | null;
+   cityByCountriesLoading: boolean;
+   cityByCountriesError: ErrorType;
 }

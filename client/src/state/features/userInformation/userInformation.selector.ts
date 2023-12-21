@@ -23,3 +23,13 @@ export const postUserInformationSelector = createSelector(
 );
 export const allUsersSelector = createSelector([userInformationReducer], (userInformationSlice) => userInformationSlice.allUsers);
 export const allUsersLoadingSelector = createSelector([userInformationReducer], (userInformationSlice) => userInformationSlice.allUsersLoading);
+export const stateByCountriesSelector = createSelector([userInformationReducer], (userInformationSlice) => userInformationSlice.stateByCountries);
+export const stateByCountriesLoadingSelector = createSelector(
+   [userInformationReducer],
+   (userInformationSlice) => userInformationSlice.stateByCountriesLoading,
+);
+export const cityByCountriesSelector = createSelector([userInformationReducer], (userInformationSlice) => userInformationSlice.cityByCountries);
+export const cityByCountriesLoadingSelector = createSelector(
+   [userInformationReducer],
+   (userInformationSlice) => userInformationSlice.cityByCountriesLoading,
+);
